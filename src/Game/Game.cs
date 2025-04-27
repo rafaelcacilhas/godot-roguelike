@@ -19,7 +19,6 @@ public partial class Game : Node
 	public override void _Process(double delta)
 	{
 		var action = eventHandler.GetAction();
-		GD.Print(" action");
 
 		if(action is MovementAction movementAction){
 			playerGridPos += movementAction.Offset;
