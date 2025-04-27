@@ -3,5 +3,4 @@
 /android/
 
 # Build stuff
-.vscode/launch.json
-.vscode/settings.json
+.vscode/
