@@ -1,31 +1,48 @@
 using Godot;
-using System;
 using roguelike.src.utils;
-
-public partial class Game : Node
-{
-	Vector2I playerGridPos = Vector2I.Zero;
-	Sprite2D player;
-	EventHandler eventHandler;
+namespace roguelike{
 	
+public partial class Game : Node2D
+{		
+	Vector2I playerGridPos = Vector2I.Zero;
+	Entity player;
+		readonly EntityDefinition playerDefinition = ResourceLoader
+			.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_player.tres");
+	EventHandler eventHandler;
+	Node2D entities;
+	Map map;
+
 	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-		player = GetNode<Sprite2D>("Player");
+	public override void _Ready(){
 		eventHandler = GetNode<EventHandler>("EventHandler");
+		entities = GetNode<Node2D>("Entities");
+		map = GetNode<Map>("Map");
+
+		var size = GetViewportRect().Size.Floor() / 2;
+		var player_start_pos = Grid.WorldToGrid((Vector2I)size);	
+		player = new Entity(player_start_pos, playerDefinition);
+		entities.AddChild(player);
+
+		var npc = new Entity(player_start_pos + Vector2I.Right, playerDefinition);
+		npc.Modulate = Colors.OrangeRed;
+		entities.AddChild(npc);
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public MapData GetMapData()
+	{
+		if (map == null || map.MapData == null)
+		{
+			GD.PrintErr("Map or MapData is null!");
+			return null;
+		}
+		return map.MapData;
+	}
+		
+	public override void _PhysicsProcess(double delta)
 	{
 		var action = eventHandler.GetAction();
-
-		if(action is MovementAction movementAction){
-			playerGridPos += movementAction.Offset;
-			player.Position = Grid.GridToWorld(playerGridPos);
-		}
-		else if(action is EscapeAction){
-			GetTree().Quit();
-		}
+		action?.Perform(this, player);
 	}
+}
+
 }
