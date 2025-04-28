@@ -26,9 +26,9 @@ namespace roguelike
             GridPosition = startPosition;
         }
 
-        public void Move(Vector2I offset)
+        public void Move(Vector2I destination)
         {
-            GridPosition += offset;
+            GridPosition = destination;
         }
     }
 }

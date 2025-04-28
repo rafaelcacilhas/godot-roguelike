@@ -23,6 +23,8 @@ public partial class Game : Node2D
 		player = new Entity(player_start_pos, playerDefinition);
 		entities.AddChild(player);
 
+		GD.Print("player.GridPosition: ", player.GridPosition);
+
 		var npc = new Entity(player_start_pos + Vector2I.Right, playerDefinition);
 		npc.Modulate = Colors.OrangeRed;
 		entities.AddChild(npc);

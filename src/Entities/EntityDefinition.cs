@@ -9,7 +9,6 @@ namespace roguelike
 
 		[Export]
 		public AtlasTexture Texture { get; set; }
-
 		[Export(PropertyHint.ColorNoAlpha)]
 		public Color Color { get; set; } = Colors.White;
 	}
