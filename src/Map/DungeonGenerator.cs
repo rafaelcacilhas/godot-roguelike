@@ -28,7 +28,6 @@ namespace roguelike{
             {
                 var roomWidth = rng.RandiRange(RoomMinSize, RoomMaxSize);
                 var roomHeight = rng.RandiRange(RoomMinSize, RoomMaxSize);
-                GD.Print($"Room {currentRoom}: {roomWidth}x{roomHeight}");
                 var roomX = rng.RandiRange(1, MapWidth - roomWidth - 1);
                 var roomY = rng.RandiRange(1, MapHeight - roomHeight - 1);
                 var newRoom = new Rect2I(roomX, roomY, roomWidth, roomHeight);
