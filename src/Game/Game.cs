@@ -18,16 +18,15 @@ public partial class Game : Node2D
 		eventHandler = GetNode<EventHandler>("EventHandler");
 		entities = GetNode<Node2D>("Entities");
 		map = GetNode<Map>("Map");
+		var camera = GetNode<Camera2D>("Camera2D");
 
-		var size = GetViewportRect().Size.Floor() / 2;
-		var player_start_pos = Grid.WorldToGrid((Vector2I)size);	
-		player = new Entity(player_start_pos, playerDefinition);
+		player = new Entity( Vector2I.Zero, playerDefinition);
+		RemoveChild(camera);
+		player.AddChild(camera);
 		entities.AddChild(player);
 
-		var npc = new Entity(player_start_pos + Vector2I.Right, playerDefinition);
-		npc.Modulate = Colors.OrangeRed;
-		entities.AddChild(npc);
 		map.GenerateDungeon(player);
+		map.UpdateFov(player.GridPosition);
 	}
 
 	public MapData GetMapData()
@@ -43,7 +42,15 @@ public partial class Game : Node2D
 	public override void _PhysicsProcess(double delta)
 	{
 		var action = eventHandler.GetAction();
-		action?.Perform(this, player);
+		if (action != null) {
+			var previousPosition = player.GridPosition;
+			action?.Perform(this, player);
+
+			if(player.GridPosition != previousPosition){
+				map.UpdateFov(player.GridPosition);
+			}
+
+		}
 	}
 }
 

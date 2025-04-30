@@ -10,11 +10,16 @@ namespace roguelike
         [Export]
         public int MapHeight { get; set; } = 45;
 
+        [Export]
+        public int FovRadius { get; set; } = 8;
+
         public MapData MapData { get; set; }
         private DungeonGenerator dungeonGenerator;
+        public FieldOfView FieldOfView { get; set; }
         public override void _Ready()
         {
             dungeonGenerator = GetNode<DungeonGenerator>("MapGenerator");
+            FieldOfView = GetNode<FieldOfView>("FieldOfView");
         }
 
         public void GenerateDungeon(Entity player)
@@ -29,6 +34,10 @@ namespace roguelike
             {
                 AddChild(tile);
             }
+        }
+        public void UpdateFov(Vector2I playerGridPos)
+        {
+            FieldOfView.UpdateFov(MapData, playerGridPos, FovRadius);
         }
     }
 }
