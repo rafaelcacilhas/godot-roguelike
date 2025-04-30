@@ -11,10 +11,15 @@ namespace roguelike
         public int MapHeight { get; set; } = 45;
 
         public MapData MapData { get; set; }
-
+        private DungeonGenerator dungeonGenerator;
         public override void _Ready()
         {
-            MapData = new MapData(MapWidth, MapHeight);
+            dungeonGenerator = GetNode<DungeonGenerator>("MapGenerator");
+        }
+
+        public void GenerateDungeon(Entity player)
+        {
+            MapData = dungeonGenerator.GenerateDungeon(player);
             PlaceTiles();
         }
 

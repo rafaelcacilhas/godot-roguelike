@@ -24,6 +24,7 @@ namespace roguelike
             Modulate = entityDefinition.Color;
             Centered = false;
             GridPosition = startPosition;
+            Scale = new Vector2(Game.GAME_SCALE,Game.GAME_SCALE);
         }
 
         public void Move(Vector2I destination)

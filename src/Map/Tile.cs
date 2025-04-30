@@ -13,6 +13,7 @@ namespace roguelike
             Centered = false;
             Position = Grid.GridToWorld(gridPosition);
             SetTileType(tileDefinition);
+            Scale = new Vector2(Game.GAME_SCALE, Game.GAME_SCALE);
         }
 
         public void SetTileType(TileDefinition tileDefinition)

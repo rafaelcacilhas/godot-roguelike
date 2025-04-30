@@ -1,4 +1,4 @@
-    [gd_resource type="Resource" script_class="EntityDefinition" load_steps=4 format=3 uid="uid://cbq5xutxhwvc5"]
+[gd_resource type="Resource" script_class="EntityDefinition" load_steps=4 format=3 uid="uid://cbq5xutxhwvc5"]
 
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="1_js7ka"]
 [ext_resource type="Script" uid="uid://cxg18fv1otod5" path="res://src/Entities/EntityDefinition.cs" id="2_qkhq4"]
