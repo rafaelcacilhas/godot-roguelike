@@ -71,7 +71,7 @@ namespace roguelike
         {
             foreach (var entity in Entities)
             {
-                if (entity.GridPosition == gridPosition && entity.EntityDefinition.isBlockingMovement)
+                if (entity.GridPosition == gridPosition && entity.IsBlockingMovement())
                 {
                     return true;
                 }

@@ -14,7 +14,7 @@ namespace roguelike
 		var enemy = game.GetMapData().GetEntityAtLocation(destination); 
         if (enemy == null )
             return;
-        GD.Print($"Attacking {enemy.Name} at {enemy.GridPosition}");        
+        GD.Print($"Attacking {enemy.GetEntityName()} at {enemy.GridPosition}");        
 	}
  }
 }
