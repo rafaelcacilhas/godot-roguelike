@@ -16,28 +16,47 @@ namespace roguelike
         public MapData MapData { get; set; }
         private DungeonGenerator dungeonGenerator;
         public FieldOfView FieldOfView { get; set; }
+
+        Node2D tiles;
+	    Node2D entities;
         public override void _Ready()
         {
             dungeonGenerator = GetNode<DungeonGenerator>("MapGenerator");
             FieldOfView = GetNode<FieldOfView>("FieldOfView");
+            entities = GetNode<Node2D>("Entities");
+		    tiles = GetNode<Node2D>("Tiles");
         }
 
         public void GenerateDungeon(Entity player)
         {
             MapData = dungeonGenerator.GenerateDungeon(player);
             PlaceTiles();
+            PlaceEntities(player);
         }
 
         private void PlaceTiles()
         {
             foreach (var tile in MapData.Tiles)
             {
-                AddChild(tile);
+                tiles.AddChild(tile);
+            }
+        }
+        private void PlaceEntities(Entity player)
+        {
+            foreach (var entity in MapData.Entities)
+            {
+                entities.AddChild(entity);
             }
         }
         public void UpdateFov(Vector2I playerGridPos)
         {
             FieldOfView.UpdateFov(MapData, playerGridPos, FovRadius);
+
+            foreach (var entity in MapData.Entities)
+            {
+                entity.Visible = MapData.GetTile(entity.GridPosition).IsInView;
+            }
         }
+
     }
 }

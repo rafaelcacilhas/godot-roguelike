@@ -18,11 +18,23 @@ namespace roguelike{
         [Export]
         public int RoomMaxSize { get; set; } = 10;
 
+        [ExportCategory("Monsters RNG")]
+        [Export]
+        public int MaxMonstersPerRoom { get; set; } = 8;
+
+        public const string ORC = "orc";
+        public const string TROLL = "troll";
+		public static readonly Dictionary<string, EntityDefinition> entityTypes = new(){
+			{ ORC, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_orc.tres") },
+			{ TROLL, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_troll.tres") },
+		};
+    
         RandomNumberGenerator rng = new RandomNumberGenerator();
 
         public MapData GenerateDungeon(Entity player){
 			var dungeon = new MapData(MapWidth, MapHeight);
 			var rooms = new Array<Rect2I>();
+            dungeon.Entities.Add(player);
 
             for (int currentRoom = 0; currentRoom < MaxRooms; currentRoom++)
             {
@@ -104,7 +116,20 @@ namespace roguelike{
         }
         
         private void PlaceEntities(MapData dungeon, Rect2I room){
+            var numberOfMonsters = rng.RandiRange(0, MaxMonstersPerRoom);
+            for (int i = 0; i < numberOfMonsters; i++)
+            {
+                var monsterX = rng.RandiRange(room.Position.X + 1, room.End.X - 1);
+                var monsterY = rng.RandiRange(room.Position.Y + 1, room.End.Y - 1);
+                var monsterPosition = new Vector2I(monsterX, monsterY);
 
+                var canPlaceMonster = checkBlockers(dungeon, monsterPosition);
+                if (canPlaceMonster) {
+                    var random = rng.RandiRange(0, 1);
+                    var monster = random < 0.5? new Entity(monsterPosition,entityTypes[ORC]) : new Entity(monsterPosition,entityTypes[TROLL]);
+                    dungeon.Entities.Add(monster);
+                }
+            }
         }
         private void PlaceItems(MapData dungeon, Rect2I room){
 
@@ -112,6 +137,22 @@ namespace roguelike{
         public override void _Ready()
         {
             rng.Randomize();
+        }
+
+        private bool checkBlockers(MapData dungeon, Vector2I monsterPosition){
+            if(dungeon.GetTile(monsterPosition) == null || !dungeon.GetTile(monsterPosition).IsWalkable()){
+                return false;
+            }
+
+            foreach (var entity in dungeon.Entities)
+            {
+                if (entity.GridPosition == monsterPosition)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     } 
 }

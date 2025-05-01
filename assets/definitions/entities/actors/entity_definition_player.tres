@@ -9,5 +9,7 @@ region = Rect2(384, 32, 16, 16)
 
 [resource]
 script = ExtResource("2_qkhq4")
+Name = "Player"
 Texture = SubResource("AtlasTexture_eqybp")
 Color = Color(1, 1, 1, 1)
+isBlockingMovement = true

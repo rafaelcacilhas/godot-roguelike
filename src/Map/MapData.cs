@@ -15,7 +15,7 @@ namespace roguelike
         public int Width { get; set; }
         public int Height { get; set; }
         public Array<Tile> Tiles { get; set; }
-
+        public Array<Entity> Entities { get; set; } = new Array<Entity>();
         public MapData(int mapWidth, int mapHeight)
         {
             Width = mapWidth;
@@ -65,6 +65,30 @@ namespace roguelike
                 && coordinate.X < Width
                 && coordinate.Y >= 0
                 && coordinate.Y < Height;
+        }
+
+        public bool HasBlockingEntity(Vector2I gridPosition)
+        {
+            foreach (var entity in Entities)
+            {
+                if (entity.GridPosition == gridPosition && entity.EntityDefinition.isBlockingMovement)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Entity GetEntityAtLocation(Vector2I gridPosition)
+        {
+            foreach (var entity in Entities)
+            {
+                if (entity.GridPosition == gridPosition)
+                {
+                    return entity;
+                }
+            }
+            return null;
         }
     }
 }

@@ -71,7 +71,6 @@ namespace roguelike
 					if ((dx * dx + dy * dy) < radius2)
 					{
 						currentTile.IsInView = true;
-						GD.Print($"Tile at {ax}, {ay} is in view.");
                         fov.Add(currentTile);
 					}
 
