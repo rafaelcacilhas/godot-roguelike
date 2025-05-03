@@ -2,13 +2,21 @@ using Godot;
 namespace roguelike{
 	public partial class ActionWithDirection : Action {
         public Vector2I Offset { get; set; } = Vector2I.Zero;
-        public ActionWithDirection() {  }
-        public ActionWithDirection(int dx, int dy) {
+        public ActionWithDirection(Entity entity, int dx, int dy)  : base(entity) {
             Offset = new Vector2I(dx, dy);
         }
 
-        public override void Perform(Game game, Entity entity) {
+        public override void Perform() {
             throw new System.Exception("Calling ActionWithDirection Perform().");
         }
+
+        public Vector2I GetDestination() {
+            return Entity.GridPosition + Offset;
+        }   
+
+        public Entity GetBlockingEntityAtDestination() {
+            return GetMapData().GetEntityAtLocation(GetDestination());
+        }
+
  }
 }

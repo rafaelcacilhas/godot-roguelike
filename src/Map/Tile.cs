@@ -24,13 +24,12 @@ namespace roguelike
         {
             get => isInView;
             set
-            {
+            {       
                 isInView = value;
-                Visible = isInView;  // Not sure about this
                 Modulate = isInView ? definition.ColorLit : definition.ColorDark;
                 if (isInView && !isExplored)
                 {
-                    isExplored = true;
+                    IsExplored = true;  
                 }
             }
         }

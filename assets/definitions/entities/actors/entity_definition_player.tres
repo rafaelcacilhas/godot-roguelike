@@ -1,7 +1,21 @@
-[gd_resource type="Resource" script_class="EntityDefinition" load_steps=4 format=3 uid="uid://cbq5xutxhwvc5"]
+[gd_resource type="Resource" script_class="EntityDefinition" load_steps=7 format=3 uid="uid://cbq5xutxhwvc5"]
 
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="1_js7ka"]
+[ext_resource type="Script" uid="uid://psw1cjgx1hf5" path="res://src/Entities/Actors/Components/Definitions/FighterComponentDefinition.cs" id="1_qkhq4"]
 [ext_resource type="Script" uid="uid://cxg18fv1otod5" path="res://src/Entities/EntityDefinition.cs" id="2_qkhq4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qkhq4"]
+atlas = ExtResource("1_js7ka")
+region = Rect2(608, 176, 16, 16)
+
+[sub_resource type="Resource" id="Resource_eqybp"]
+script = ExtResource("1_qkhq4")
+MaxHP = 10
+Attack = 5
+Defense = 2
+DeathTexture = SubResource("AtlasTexture_qkhq4")
+DeathColor = Color(0.545098, 0, 0, 1)
+metadata/_custom_type_script = "uid://psw1cjgx1hf5"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_eqybp"]
 atlas = ExtResource("1_js7ka")
@@ -13,3 +27,6 @@ Name = "Player"
 Texture = SubResource("AtlasTexture_eqybp")
 Color = Color(1, 1, 1, 1)
 isBlockingMovement = true
+EntityType = 2
+FighterDefinition = SubResource("Resource_eqybp")
+AIType = 1

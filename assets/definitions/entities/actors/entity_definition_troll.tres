@@ -1,7 +1,21 @@
-[gd_resource type="Resource" script_class="EntityDefinition" load_steps=4 format=3 uid="uid://w8vcj7qs2edg"]
+[gd_resource type="Resource" script_class="EntityDefinition" load_steps=7 format=3 uid="uid://w8vcj7qs2edg"]
 
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="1_yloo0"]
 [ext_resource type="Script" uid="uid://cxg18fv1otod5" path="res://src/Entities/EntityDefinition.cs" id="2_0yx76"]
+[ext_resource type="Script" uid="uid://psw1cjgx1hf5" path="res://src/Entities/Actors/Components/Definitions/FighterComponentDefinition.cs" id="2_54ag0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsol5"]
+atlas = ExtResource("1_yloo0")
+region = Rect2(768, 64, 16, 16)
+
+[sub_resource type="Resource" id="Resource_7o8bl"]
+script = ExtResource("2_54ag0")
+MaxHP = 10
+Attack = 3
+Defense = 1
+DeathTexture = SubResource("AtlasTexture_xsol5")
+DeathColor = Color(0.545098, 0, 0, 1)
+metadata/_custom_type_script = "uid://psw1cjgx1hf5"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_54ag0"]
 atlas = ExtResource("1_yloo0")
@@ -13,3 +27,6 @@ Name = "Troll"
 Texture = SubResource("AtlasTexture_54ag0")
 Color = Color(0.579782, 0.576503, 0.234854, 1)
 isBlockingMovement = true
+EntityType = 2
+FighterDefinition = SubResource("Resource_7o8bl")
+AIType = 1

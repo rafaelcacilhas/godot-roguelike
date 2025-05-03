@@ -2,19 +2,18 @@ using Godot;
 namespace roguelike
 {
 	public partial class MeleeAction : ActionWithDirection {
-        public MeleeAction() { }
 
-        public MeleeAction(int dx, int dy)
-        {
+        public MeleeAction(Entity entity, int dx, int dy) : base(entity, dx, dy) {
             Offset = new Vector2I(dx, dy);
         }
 
-	public override void Perform(Game game, Entity entity) {
-		var destination = entity.GridPosition + Offset;
-		var enemy = game.GetMapData().GetEntityAtLocation(destination); 
-        if (enemy == null )
+	public override void Perform() {
+        var target = GetBlockingEntityAtDestination();
+        if (target == null)
+        {
             return;
-        GD.Print($"Attacking {enemy.GetEntityName()} at {enemy.GridPosition}");        
+        }
+        GD.Print($"Attacking {target.GetEntityName()} at {target.GridPosition}");        
 	}
  }
 }

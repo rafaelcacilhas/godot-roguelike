@@ -2,30 +2,19 @@ using Godot;
 namespace roguelike
 {
 	public partial class BumpAction : ActionWithDirection {
-        public BumpAction() { }
 
-        public BumpAction(int dx, int dy)
-        {
+        public BumpAction(Entity entity, int dx, int dy) : base(entity, dx, dy) {
             Offset = new Vector2I(dx, dy);
         }
 
-	public override void Perform(Game game, Entity entity) {
-		var destination = entity.GridPosition + Offset;
-        var mapData = game.GetMapData();     
-        if(mapData.HasBlockingEntity(destination))
+
+	public override void Perform() {
+        var target = GetBlockingEntityAtDestination();
+        if (target == null)
         {
-            var blockingEntity = mapData.GetEntityAtLocation(destination);
-            if (blockingEntity != null )
-            {
-                var meleeAction = new MeleeAction(Offset.X, Offset.Y);
-                meleeAction.Perform(game, entity);
-            }
+            new MovementAction(Entity, Offset.X, Offset.Y).Perform();
         }
-        else
-        {
-            var movementAction = new MovementAction(Offset.X, Offset.Y);
-            movementAction.Perform(game, entity);
-	    }
+            new MeleeAction(Entity, Offset.X, Offset.Y).Perform();
     }
  }
 }

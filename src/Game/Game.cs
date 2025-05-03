@@ -1,27 +1,25 @@
-using System.Reflection.Metadata;
 using Godot;
-using roguelike.src.utils;
 namespace roguelike{
 
 	public partial class Game : Node2D
 	{		
+		public const int GAME_SCALE = 2;
+
 		Vector2I playerGridPos = Vector2I.Zero;
 		Entity player;
 		readonly EntityDefinition playerDefinition = ResourceLoader
 				.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_player.tres");
-		EventHandler eventHandler;
 
+		InputHandler inputHandler;
 		public Map map;
-		public const int GAME_SCALE = 2;
 
-		// Called when the node enters the scene tree for the first time.
 		public override void _Ready(){
-			eventHandler = GetNode<EventHandler>("EventHandler");
+			inputHandler = GetNode<InputHandler>("EventHandler");
 			map = GetNode<Map>("Map");
 			var camera = GetNode<Camera2D>("Camera2D");
 			RemoveChild(camera);
 
-			player = new Entity( Vector2I.Zero, playerDefinition);
+			player = new Entity( Vector2I.Zero, playerDefinition, map.MapData);	
 			player.AddChild(camera);
 
 			map.GenerateDungeon(player);
@@ -30,21 +28,26 @@ namespace roguelike{
 
 		public override void _PhysicsProcess(double delta)
 		{
-			var action = eventHandler.GetAction();
+			var action = inputHandler.GetAction(player);
+
 			if (action != null) {
-				var previousPosition = player.GridPosition;
-				action?.Perform(this, player);
+				action?.Perform();
 				HandleEnemyTurn();
-
-				if(player.GridPosition != previousPosition){
-					map.UpdateFov(player.GridPosition);
-				}
-
-
+				map.UpdateFov(player.GridPosition);
 			}
 		}
 
-		
+		public void HandleEnemyTurn()
+		{
+			foreach (var entity in GetMapData().Entities)
+			{
+				if (entity != player && entity.IsAlive() ){
+					GD.Print( entity.GetEntityName(), " performing Action");
+					entity.AIComponent?.Perform();
+				} 
+			}
+		}	
+
 		public MapData GetMapData()
 		{
 			if (map == null || map.MapData == null)
@@ -54,16 +57,6 @@ namespace roguelike{
 			}
 			return map.MapData;
 		}
-
-		public void HandleEnemyTurn()
-		{
-			foreach (var entity in map.MapData.Entities)
-			{
-				if (entity == player) continue;
-
-				GD.Print($"Entity: {entity.GetEntityName()} acts");	
-			}
-		}	
 	}
 
 }

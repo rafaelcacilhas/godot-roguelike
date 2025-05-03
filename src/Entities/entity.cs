@@ -1,6 +1,6 @@
 using System;
 using Godot;
-using roguelike.src.utils;
+using roguelike.src.utils; 
 
 namespace roguelike
 {
@@ -28,20 +28,40 @@ namespace roguelike
             }
         }
 
+        public MapData MapData;
+        public enum AIType { NONE, HOSTILE}
+
+        public FighterComponent FighterComponent { get; set; }
+        public BaseAIComponent AIComponent { get; set; }
+
+        private EntityType entityType;
+        public EntityType EntityType
+        {
+            get => entityType;
+            set
+            {
+                entityType = value;
+                ZIndex = (int)entityType;
+            }
+        }
+        
         public Entity(){}
 
-        public Entity(Vector2I startPosition, EntityDefinition entityDefinition)
+        public Entity(Vector2I startPosition, EntityDefinition entityDefinition, MapData mapData)
         {
-
+            Scale = new Vector2(Game.GAME_SCALE,Game.GAME_SCALE);
             Centered = false;
             GridPosition = startPosition;
-            Scale = new Vector2(Game.GAME_SCALE,Game.GAME_SCALE);
             EntityDefinition = entityDefinition;
+            MapData = mapData;  
+            SetEntityType(entityDefinition);
         }
 
-        public void Move(Vector2I destination)
+        public void Move(Vector2I offset)
         {
-            GridPosition = destination;
+            MapData.UnregisterBlockingEntity(this);
+            GridPosition += offset;
+            MapData.RegisterBlockingEntity(this);
         }
     
         public bool IsBlockingMovement()
@@ -53,5 +73,35 @@ namespace roguelike
         {
             return EntityDefinition.Name;
         }
+
+        public bool IsAlive() {
+            return AIComponent != null;
+        }
+
+        public void SetEntityType(EntityDefinition entityDefinition)
+        {
+            EntityDefinition = entityDefinition;
+            Texture = entityDefinition.Texture;
+            Modulate = entityDefinition.Color;
+            EntityType = entityDefinition.EntityType;
+
+            switch (entityDefinition.AIType)
+            {
+                case AIType.HOSTILE:
+                    GD.Print("Adding Hostile AI Component", entityDefinition.AIType);
+                    AIComponent = new HostileEnemyAIComponent();
+                    AddChild(AIComponent);  
+                    break;
+            }
+
+            if (entityDefinition.FighterDefinition != null)
+            {
+                GD.Print("Adding Fighter Component", entityDefinition.FighterDefinition);   
+                FighterComponent = new FighterComponent(entityDefinition.FighterDefinition);
+                AddChild(FighterComponent);
+            }   
+            
+        }
+
     }
 }

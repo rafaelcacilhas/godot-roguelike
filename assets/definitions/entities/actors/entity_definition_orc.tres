@@ -1,7 +1,21 @@
-[gd_resource type="Resource" script_class="EntityDefinition" load_steps=4 format=3 uid="uid://bqslrj7yc30s"]
+[gd_resource type="Resource" script_class="EntityDefinition" load_steps=7 format=3 uid="uid://bqslrj7yc30s"]
 
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="1_jo12c"]
 [ext_resource type="Script" uid="uid://cxg18fv1otod5" path="res://src/Entities/EntityDefinition.cs" id="2_chaqc"]
+[ext_resource type="Script" uid="uid://psw1cjgx1hf5" path="res://src/Entities/Actors/Components/Definitions/FighterComponentDefinition.cs" id="2_x1j3b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nk3ha"]
+atlas = ExtResource("1_jo12c")
+region = Rect2(608, 176, 16, 16)
+
+[sub_resource type="Resource" id="Resource_ieapn"]
+script = ExtResource("2_x1j3b")
+MaxHP = 10
+Attack = 2
+Defense = 1
+DeathTexture = SubResource("AtlasTexture_nk3ha")
+DeathColor = Color(0.545098, 0, 0, 1)
+metadata/_custom_type_script = "uid://psw1cjgx1hf5"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_x1j3b"]
 atlas = ExtResource("1_jo12c")
@@ -13,3 +27,6 @@ Name = "Orc"
 Texture = SubResource("AtlasTexture_x1j3b")
 Color = Color(0.349512, 0.655658, 0.363211, 1)
 isBlockingMovement = true
+EntityType = 2
+FighterDefinition = SubResource("Resource_ieapn")
+AIType = 1

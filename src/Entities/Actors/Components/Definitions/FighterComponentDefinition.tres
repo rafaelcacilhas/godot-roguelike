@@ -1,0 +1,6 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://nx68l6hiwy1p"]
+
+[ext_resource type="Script" uid="uid://dj851aoj6rqx0" path="res://src/Entities/Actors/Components/FigherComponent.cs" id="1_5bwce"]
+
+[resource]
+script = ExtResource("1_5bwce")

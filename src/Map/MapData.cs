@@ -16,10 +16,15 @@ namespace roguelike
         public int Height { get; set; }
         public Array<Tile> Tiles { get; set; }
         public Array<Entity> Entities { get; set; } = new Array<Entity>();
-        public MapData(int mapWidth, int mapHeight)
+        public Entity Player;
+
+        public float EntityPathfindingWeight = 10;
+        public AStarGrid2D Pathfinder;
+        public MapData(int mapWidth, int mapHeight, Entity player)
         {
             Width = mapWidth;
             Height = mapHeight;
+            Player = player;
             SetupTiles();
         }
         private void SetupTiles()
@@ -59,7 +64,7 @@ namespace roguelike
             return gridPosition.Y * Width + gridPosition.X;
         }
 
-        private bool IsInBounds(Vector2I coordinate)
+        public bool IsInBounds(Vector2I coordinate)
         {
             return coordinate.X >= 0
                 && coordinate.X < Width
@@ -89,6 +94,52 @@ namespace roguelike
                 }
             }
             return null;
+        }
+
+        public void RegisterBlockingEntity(Entity entity)
+        {
+            Pathfinder.SetPointWeightScale(entity.GridPosition, EntityPathfindingWeight);
+        }   
+
+        public void UnregisterBlockingEntity(Entity entity)
+        {
+            Pathfinder.SetPointWeightScale(entity.GridPosition, 0);
+        }
+
+        public void SetupPathfinding()
+        {
+            Pathfinder = new AStarGrid2D();
+            Pathfinder.Region = new Rect2I(0,0, Width, Height);
+            Pathfinder.Update();
+
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    var gridPosition = new Vector2I(x, y);
+                    var tile = GetTile(gridPosition);
+                    Pathfinder.SetPointSolid(gridPosition, !tile.IsWalkable());
+                }
+            }
+
+            foreach (var entity in Entities)
+            {
+                if (entity.IsBlockingMovement())
+                {
+                    RegisterBlockingEntity(entity);
+                }
+            }
+
+        }
+
+        public Array<Entity> GetActors()
+        {
+            var actors = new Array<Entity>();
+            foreach (var entity in Entities)
+            {
+                if (entity.IsAlive()) actors.Add(entity);
+            }
+            return actors;
         }
     }
 }

@@ -3,7 +3,7 @@ using Godot;
 namespace roguelike
 {
 	[GlobalClass]
-		public partial class 	EntityDefinition : Resource
+		public partial class	EntityDefinition : Resource
 	{
 		[ExportCategory("Visuals")]
 		[Export]
@@ -17,5 +17,14 @@ namespace roguelike
 		[ExportCategory("Mechanics")]
 		[Export]
 		public bool isBlockingMovement { get; set; } = true;
+
+		[Export]
+		public EntityType EntityType { get; set; } = EntityType.ACTOR;
+
+		[ExportCategory("Components")]
+		[Export]
+		public FighterComponentDefinition FighterDefinition { get; set; }
+		[Export]
+		public Entity.AIType AIType { get; set; } = Entity.AIType.NONE;
 	}
 }

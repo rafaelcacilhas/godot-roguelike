@@ -2,23 +2,22 @@ using Godot;
 namespace roguelike
 {
 	public partial class MovementAction : ActionWithDirection {
-        public MovementAction() { }
 
-        public MovementAction(int dx, int dy)
-        {
-            Offset = new Vector2I(dx, dy);
-        }
+        public MovementAction(Entity player, int dx, int dy) : base(player, dx, dy) {}
 
-	public override void Perform(Game game, Entity entity) {
-		var destination = entity.GridPosition + Offset;
-		var mapData = game.GetMapData(); 
-		var destinationTile = mapData.GetTile(destination);
-		
-		if (destinationTile == null || !destinationTile.IsWalkable())
+	public override void Perform() {
+		var mapData = GetMapData();
+		var destination = mapData.GetTile(GetDestination() );
+
+		if(destination == null || !destination.IsWalkable()) {
 			return;
-		if (mapData.HasBlockingEntity(destination))
+		}
+
+		if(GetBlockingEntityAtDestination() != null) {
 			return;
-		entity.Move(destination);
+		}
+
+		Entity.Move(Offset);
 	}
  }
 }

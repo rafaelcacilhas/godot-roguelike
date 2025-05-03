@@ -12,7 +12,7 @@ namespace roguelike{
 
         [ExportCategory("Rooms RNG")]
         [Export]
-        public int MaxRooms { get; set; } = 5;
+        public int MaxRooms { get; set; } = 2;
         [Export]
         public int RoomMinSize { get; set; } = 5;
         [Export]
@@ -20,7 +20,7 @@ namespace roguelike{
 
         [ExportCategory("Monsters RNG")]
         [Export]
-        public int MaxMonstersPerRoom { get; set; } = 8;
+        public int MaxMonstersPerRoom { get; set; } = 5;
 
         public const string ORC = "orc";
         public const string TROLL = "troll";
@@ -32,7 +32,7 @@ namespace roguelike{
         RandomNumberGenerator rng = new RandomNumberGenerator();
 
         public MapData GenerateDungeon(Entity player){
-			var dungeon = new MapData(MapWidth, MapHeight);
+			var dungeon = new MapData(MapWidth, MapHeight, player);
 			var rooms = new Array<Rect2I>();
             dungeon.Entities.Add(player);
 
@@ -55,6 +55,7 @@ namespace roguelike{
 
                 if(!rooms.Any()){
                     player.GridPosition = newRoom.GetCenter();
+                    player.MapData = dungeon;
                 } else {
                     TunnelBetween(dungeon, rooms.Last().GetCenter(), newRoom.GetCenter());
                 }
@@ -63,6 +64,7 @@ namespace roguelike{
                 PlaceItems(dungeon, newRoom);
                 rooms.Add(newRoom);
             }
+            dungeon.SetupPathfinding();
             return dungeon;
         }
     
@@ -116,7 +118,7 @@ namespace roguelike{
         }
         
         private void PlaceEntities(MapData dungeon, Rect2I room){
-            var numberOfMonsters = rng.RandiRange(0, MaxMonstersPerRoom);
+            var numberOfMonsters = rng.RandiRange(1, MaxMonstersPerRoom);
             for (int i = 0; i < numberOfMonsters; i++)
             {
                 var monsterX = rng.RandiRange(room.Position.X + 1, room.End.X - 1);
@@ -126,7 +128,7 @@ namespace roguelike{
                 var canPlaceMonster = checkBlockers(dungeon, monsterPosition);
                 if (canPlaceMonster) {
                     var random = rng.RandiRange(0, 1);
-                    var monster = random < 0.5? new Entity(monsterPosition,entityTypes[ORC]) : new Entity(monsterPosition,entityTypes[TROLL]);
+                    var monster = random < 0.5? new Entity(monsterPosition,entityTypes[ORC], dungeon) : new Entity(monsterPosition,entityTypes[TROLL], dungeon);
                     dungeon.Entities.Add(monster);
                 }
             }
