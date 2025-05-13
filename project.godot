@@ -15,6 +15,10 @@ run/main_scene="uid://w0jwbq5dwo6c"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SignalBus="*res://src/Utils/SignalBus.cs"
+
 [dotnet]
 
 project/assembly_name="roguelike"

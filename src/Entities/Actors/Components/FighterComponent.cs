@@ -1,19 +1,25 @@
 using Godot;
-namespace roguelike{
-    public partial class FighterComponent : Component{
+namespace roguelike
+{
+    public partial class FighterComponent : Component
+    {
         public int MaxHP { get; set; }
         private int hp;
-        public int HP { get => hp; set {
-            hp = Mathf.Clamp(value, 0, MaxHP);
-            if (hp <= 0) Die();
-        } } 
+        public int HP
+        {
+            get => hp; set
+            {
+                hp = Mathf.Clamp(value, 0, MaxHP);
+                if (hp <= 0) Die();
+            }
+        }
         public int Attack { get; set; }
-        public int Defense { get; set; }    
+        public int Defense { get; set; }
 
-        public AtlasTexture DeathTexture { get; set; } 
-        public Color DeathColor { get; set; } 
+        public AtlasTexture DeathTexture { get; set; }
+        public Color DeathColor { get; set; }
 
-        public FighterComponent(FighterComponentDefinition fighterDefinition  )
+        public FighterComponent(FighterComponentDefinition fighterDefinition)
         {
             MaxHP = fighterDefinition.MaxHP;
             HP = fighterDefinition.MaxHP;
@@ -36,7 +42,29 @@ namespace roguelike{
 
         public void Die()
         {
-            GD.Print("Entity has died.");
+            string DeathMessage;
+            if (GetMapData().Player == Entity)
+            {
+                DeathMessage = "You died!";
+                var signalBus = GetNode<SignalBus>("/root/SignalBus");
+                signalBus.EmitSignal(SignalBus.SignalName.PlayerDied);
+            }
+            else
+            {
+                DeathMessage = $"{Entity.GetEntityName()} has died.";
+            }
+
+            GD.Print(DeathMessage);
+
+            Entity.EntityType = EntityType.CORPSE;
+            Entity.Texture = DeathTexture;
+            Entity.Modulate = DeathColor;
+            Entity.AIComponent.QueueFree();
+            Entity.AIComponent = null;
+            Entity.Name = "Remains of " + Entity.GetEntityName();
+            Entity.BlocksMovement = false;
+            GetMapData().UnregisterBlockingEntity(Entity);
+
         }
     }
 }

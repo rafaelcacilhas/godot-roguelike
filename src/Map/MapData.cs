@@ -99,7 +99,7 @@ namespace roguelike
         public void RegisterBlockingEntity(Entity entity)
         {
             Pathfinder.SetPointWeightScale(entity.GridPosition, EntityPathfindingWeight);
-        }   
+        }
 
         public void UnregisterBlockingEntity(Entity entity)
         {
@@ -109,7 +109,7 @@ namespace roguelike
         public void SetupPathfinding()
         {
             Pathfinder = new AStarGrid2D();
-            Pathfinder.Region = new Rect2I(0,0, Width, Height);
+            Pathfinder.Region = new Rect2I(0, 0, Width, Height);
             Pathfinder.Update();
 
             for (int y = 0; y < Height; y++)
@@ -141,5 +141,19 @@ namespace roguelike
             }
             return actors;
         }
+
+        public Entity GetActorAtLocation(Vector2I gridPosition)
+        {
+            foreach (var actor in GetActors())
+            {
+                if (actor.GridPosition == gridPosition)
+                {
+                    return actor;
+                }
+            }
+            return null;
+        }
+
+
     }
 }

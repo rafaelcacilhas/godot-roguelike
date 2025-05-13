@@ -1,11 +1,12 @@
 using System;
 using Godot;
-using roguelike.src.utils; 
+using roguelike.src.utils;
 
 namespace roguelike
 {
     public partial class Entity : Sprite2D
     {
+        public enum AIType { NONE, HOSTILE }
         private EntityDefinition entityDefinition;
         public EntityDefinition EntityDefinition
         {
@@ -27,9 +28,9 @@ namespace roguelike
                 Position = Grid.GridToWorld(gridPosition);
             }
         }
-
         public MapData MapData;
-        public enum AIType { NONE, HOSTILE}
+        public string EntityName { get; set; }
+        public bool BlocksMovement { get; set; }
 
         public FighterComponent FighterComponent { get; set; }
         public BaseAIComponent AIComponent { get; set; }
@@ -44,16 +45,16 @@ namespace roguelike
                 ZIndex = (int)entityType;
             }
         }
-        
-        public Entity(){}
+
+        public Entity() { }
 
         public Entity(Vector2I startPosition, EntityDefinition entityDefinition, MapData mapData)
         {
-            Scale = new Vector2(Game.GAME_SCALE,Game.GAME_SCALE);
+            Scale = new Vector2(Game.GAME_SCALE, Game.GAME_SCALE);
             Centered = false;
             GridPosition = startPosition;
             EntityDefinition = entityDefinition;
-            MapData = mapData;  
+            MapData = mapData;
             SetEntityType(entityDefinition);
         }
 
@@ -63,24 +64,27 @@ namespace roguelike
             GridPosition += offset;
             MapData.RegisterBlockingEntity(this);
         }
-    
+
         public bool IsBlockingMovement()
         {
-            return EntityDefinition.isBlockingMovement;
+            return BlocksMovement;
         }
 
-        public String GetEntityName()
+        public string GetEntityName()
         {
             return EntityDefinition.Name;
         }
 
-        public bool IsAlive() {
+        public bool IsAlive()
+        {
             return AIComponent != null;
         }
 
         public void SetEntityType(EntityDefinition entityDefinition)
         {
             EntityDefinition = entityDefinition;
+            BlocksMovement = entityDefinition.isBlockingMovement;
+            EntityName = entityDefinition.Name;
             Texture = entityDefinition.Texture;
             Modulate = entityDefinition.Color;
             EntityType = entityDefinition.EntityType;
@@ -88,19 +92,17 @@ namespace roguelike
             switch (entityDefinition.AIType)
             {
                 case AIType.HOSTILE:
-                    GD.Print("Adding Hostile AI Component", entityDefinition.AIType);
                     AIComponent = new HostileEnemyAIComponent();
-                    AddChild(AIComponent);  
+                    AddChild(AIComponent);
                     break;
             }
 
             if (entityDefinition.FighterDefinition != null)
             {
-                GD.Print("Adding Fighter Component", entityDefinition.FighterDefinition);   
                 FighterComponent = new FighterComponent(entityDefinition.FighterDefinition);
                 AddChild(FighterComponent);
-            }   
-            
+            }
+
         }
 
     }

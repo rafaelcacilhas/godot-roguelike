@@ -1,8 +1,9 @@
 using Godot;
-namespace roguelike{
+namespace roguelike
+{
 
 	public partial class Game : Node2D
-	{		
+	{
 		public const int GAME_SCALE = 2;
 
 		Vector2I playerGridPos = Vector2I.Zero;
@@ -13,13 +14,14 @@ namespace roguelike{
 		InputHandler inputHandler;
 		public Map map;
 
-		public override void _Ready(){
-			inputHandler = GetNode<InputHandler>("EventHandler");
+		public override void _Ready()
+		{
+			inputHandler = GetNode<InputHandler>("InputHandler");
 			map = GetNode<Map>("Map");
 			var camera = GetNode<Camera2D>("Camera2D");
 			RemoveChild(camera);
 
-			player = new Entity( Vector2I.Zero, playerDefinition, map.MapData);	
+			player = new Entity(Vector2I.Zero, playerDefinition, map.MapData);
 			player.AddChild(camera);
 
 			map.GenerateDungeon(player);
@@ -28,10 +30,29 @@ namespace roguelike{
 
 		public override void _PhysicsProcess(double delta)
 		{
+			if (inputHandler == null)
+			{
+				GD.PrintErr("inputHandler is null!");
+				return;
+			}
+
+			if (player == null)
+			{
+				GD.PrintErr("player is null!");
+				return;
+			}
+
+			if (map == null || map.MapData == null)
+			{
+				GD.PrintErr("map or map.MapData is null!");
+				return;
+			}
+
 			var action = inputHandler.GetAction(player);
 
-			if (action != null) {
-				action?.Perform();
+			if (action != null)
+			{
+				action.Perform();
 				HandleEnemyTurn();
 				map.UpdateFov(player.GridPosition);
 			}
@@ -41,12 +62,13 @@ namespace roguelike{
 		{
 			foreach (var entity in GetMapData().Entities)
 			{
-				if (entity != player && entity.IsAlive() ){
-					GD.Print( entity.GetEntityName(), " performing Action");
+				if (entity != player && entity.IsAlive())
+				{
+					GD.Print(entity.GetEntityName(), " performing Action");
 					entity.AIComponent?.Perform();
-				} 
+				}
 			}
-		}	
+		}
 
 		public MapData GetMapData()
 		{

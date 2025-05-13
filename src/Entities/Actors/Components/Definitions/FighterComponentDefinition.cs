@@ -17,7 +17,8 @@ namespace roguelike
         [ExportCategory("Visuals")]
 
         [Export]
-        public AtlasTexture DeathTexture { get; set; }
+        public AtlasTexture DeathTexture { get; set; } = ResourceLoader
+            .Load<AtlasTexture>("res://assets/resources/default_death_texture.tres");
 
         [Export]
         public Color DeathColor { get; set; } = Colors.DarkRed;
