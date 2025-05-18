@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://w0jwbq5dwo6c"]
+[gd_scene load_steps=17 format=3 uid="uid://w0jwbq5dwo6c"]
 
 [ext_resource type="Script" uid="uid://bxepnsvptgupw" path="res://src/Game/Game.cs" id="1_5fh4b"]
 [ext_resource type="Script" uid="uid://byh7hp1csuc7v" path="res://src/Map/Map.cs" id="2_0fb64"]
@@ -10,7 +10,9 @@
 [ext_resource type="Script" uid="uid://cwtel5s5q5etn" path="res://src/Map/FieldOfView.cs" id="5_qb2ae"]
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="8_yeien"]
 [ext_resource type="Script" uid="uid://r8a44tix635a" path="res://src/GUI/HpDisplay.cs" id="9_vvitb"]
+[ext_resource type="Script" uid="uid://d0ecptlkdkuku" path="res://src/GUI/MouseoverChecker.cs" id="9_x1u72"]
 [ext_resource type="Script" uid="uid://cgb053qpjopyu" path="res://src/GUI/MessageLog.cs" id="10_5ikym"]
+[ext_resource type="LabelSettings" uid="uid://den6vfug2mfa2" path="res://assets/resources/message_label_settings.tres" id="12_w4r46"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vvitb"]
 content_margin_left = 8.0
@@ -46,14 +48,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SubViewportContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 5.0
 
 [node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer"]
 disable_3d = true
 canvas_item_default_texture_filter = 0
+size = Vector2i(1152, 536)
+render_target_update_mode = 4
 
 [node name="Game" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport"]
 script = ExtResource("1_5fh4b")
@@ -69,6 +71,8 @@ script = ExtResource("3_2s6fp")
 
 [node name="HistoryViewerInputHandler" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/InputHandler"]
 script = ExtResource("5_itvb1")
+MessagesPanelPath = NodePath("../../../../../InfoBar/MessagePanel")
+MessageLogPath = NodePath("../../../../../InfoBar/MessagePanel/MessageLog")
 
 [node name="Map" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game"]
 script = ExtResource("2_0fb64")
@@ -82,6 +86,9 @@ script = ExtResource("5_qb2ae")
 [node name="Tiles" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
 
 [node name="Entities" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
+
+[node name="MouseoverChecker" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
+script = ExtResource("9_x1u72")
 
 [node name="Camera2D" type="Camera2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game"]
 
@@ -105,8 +112,10 @@ script = ExtResource("9_vvitb")
 [node name="HpBar" type="ProgressBar" parent="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/HpDisplay"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_5ikym")
 theme_override_styles/fill = SubResource("StyleBoxFlat_itvb1")
+step = 1.0
 show_percentage = false
 
 [node name="HpLabel" type="Label" parent="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/HpDisplay"]
@@ -115,6 +124,12 @@ layout_mode = 2
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="MouseoverLabel" type="Label" parent="VBoxContainer/InfoBar/StatsPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+label_settings = ExtResource("12_w4r46")
+
 [node name="MessagePanel" type="PanelContainer" parent="VBoxContainer/InfoBar"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -122,6 +137,7 @@ size_flags_stretch_ratio = 2.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_vvitb")
 
 [node name="MessageLog" type="ScrollContainer" parent="VBoxContainer/InfoBar/MessagePanel"]
+unique_name_in_owner = true
 layout_mode = 2
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
@@ -133,3 +149,4 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [connection signal="PlayerCreated" from="VBoxContainer/SubViewportContainer/SubViewport/Game" to="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/HpDisplay" method="Initialize"]
+[connection signal="EntitiesFocused" from="VBoxContainer/SubViewportContainer/SubViewport/Game/Map/MouseoverChecker" to="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/MouseoverLabel" method="set_text"]

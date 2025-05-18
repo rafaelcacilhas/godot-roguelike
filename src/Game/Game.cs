@@ -69,7 +69,7 @@ namespace roguelike
 			{
 				if (entity != player && entity.IsAlive())
 				{
-					GD.Print(entity.GetEntityName(), " performing Action");
+					//GD.Print(entity.GetEntityName(), " performing Action");
 					entity.AIComponent?.Perform();
 				}
 			}

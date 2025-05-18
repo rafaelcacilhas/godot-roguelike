@@ -32,6 +32,8 @@ namespace roguelike
 			if (Input.IsActionJustPressed("ui_cancel")) action = new EscapeAction(player);
 			if (Input.IsActionJustPressed("ui_text_backspace")) action = new RestartAction(player);
 
+			if (Input.IsActionJustPressed("view_history")) GetParent<InputHandler>().TransitionTo(InputHandler.InputHandlers.HISTORY_VIEWER);
+
 			return action;
 		}
 	}

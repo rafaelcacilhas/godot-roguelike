@@ -9,7 +9,7 @@ namespace roguelike
         [Export(PropertyHint.NodePathValidTypes, "PanelContainer")]
         public NodePath MessagesPanelPath { get; set; }
 
-        [Export(PropertyHint.NodePathValidTypes, "MessageLog")]
+        [Export(PropertyHint.NodePathValidTypes, "ScrollContainer")]
         public NodePath MessageLogPath { get; set; }
 
         private PanelContainer messagePanel;
@@ -20,12 +20,12 @@ namespace roguelike
             messagePanel = GetNode<PanelContainer>(MessagesPanelPath);
             messageLog = GetNode<MessageLog>(MessageLogPath);
         }
-
         public override void Enter() =>
             messagePanel.SelfModulate = Colors.Red;
 
         public override void Exit() =>
             messagePanel.SelfModulate = Colors.White;
+
 
         public override Action GetAction(Entity player)
         {
