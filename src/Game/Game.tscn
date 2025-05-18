@@ -50,6 +50,8 @@ grow_vertical = 2
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
 
 [node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer"]
 disable_3d = true
