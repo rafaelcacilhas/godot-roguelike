@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://w0jwbq5dwo6c"]
+[gd_scene load_steps=15 format=3 uid="uid://w0jwbq5dwo6c"]
 
 [ext_resource type="Script" uid="uid://bxepnsvptgupw" path="res://src/Game/Game.cs" id="1_5fh4b"]
 [ext_resource type="Script" uid="uid://byh7hp1csuc7v" path="res://src/Map/Map.cs" id="2_0fb64"]
@@ -6,31 +6,130 @@
 [ext_resource type="Script" uid="uid://bjcgn8dgcdbwy" path="res://src/Game/EventHandlers/MainGameInputHandler.cs" id="2_rn0ke"]
 [ext_resource type="Script" uid="uid://di18nn7v2861w" path="res://src/Game/EventHandlers/GameOverInputHandler.cs" id="3_2s6fp"]
 [ext_resource type="Script" uid="uid://cnqa24lrby71v" path="res://src/Map/DungeonGenerator.cs" id="4_0fb64"]
+[ext_resource type="Script" uid="uid://5x1anesh62fn" path="res://src/Game/EventHandlers/HistoryViewerInputHandler.cs" id="5_itvb1"]
 [ext_resource type="Script" uid="uid://cwtel5s5q5etn" path="res://src/Map/FieldOfView.cs" id="5_qb2ae"]
+[ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="8_yeien"]
+[ext_resource type="Script" uid="uid://r8a44tix635a" path="res://src/GUI/HpDisplay.cs" id="9_vvitb"]
+[ext_resource type="Script" uid="uid://cgb053qpjopyu" path="res://src/GUI/MessageLog.cs" id="10_5ikym"]
 
-[node name="Game" type="Node2D"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vvitb"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+texture = ExtResource("8_yeien")
+texture_margin_left = 8.0
+texture_margin_top = 8.0
+texture_margin_right = 8.0
+texture_margin_bottom = 8.0
+region_rect = Rect2(768, 336, 16, 16)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5ikym"]
+bg_color = Color(0.498039, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_itvb1"]
+bg_color = Color(0, 0.498039, 0, 1)
+
+[node name="InterfaceRoot" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewportContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.0
+
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/SubViewportContainer"]
+disable_3d = true
+canvas_item_default_texture_filter = 0
+
+[node name="Game" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport"]
 script = ExtResource("1_5fh4b")
 
-[node name="InputHandler" type="Node" parent="."]
+[node name="InputHandler" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game"]
 script = ExtResource("2_2s6fp")
 
-[node name="MainGameInputHandler" type="Node" parent="InputHandler"]
+[node name="MainGameInputHandler" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/InputHandler"]
 script = ExtResource("2_rn0ke")
 
-[node name="GameOverInputHandler" type="Node" parent="InputHandler"]
+[node name="GameOverInputHandler" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/InputHandler"]
 script = ExtResource("3_2s6fp")
 
-[node name="Map" type="Node2D" parent="."]
+[node name="HistoryViewerInputHandler" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/InputHandler"]
+script = ExtResource("5_itvb1")
+
+[node name="Map" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game"]
 script = ExtResource("2_0fb64")
 
-[node name="MapGenerator" type="Node" parent="Map"]
+[node name="MapGenerator" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
 script = ExtResource("4_0fb64")
 
-[node name="FieldOfView" type="Node" parent="Map"]
+[node name="FieldOfView" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
 script = ExtResource("5_qb2ae")
 
-[node name="Tiles" type="Node2D" parent="Map"]
+[node name="Tiles" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
 
-[node name="Entities" type="Node2D" parent="Map"]
+[node name="Entities" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/Map"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game"]
+
+[node name="InfoBar" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="StatsPanel" type="PanelContainer" parent="VBoxContainer/InfoBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_vvitb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/InfoBar/StatsPanel"]
+layout_mode = 2
+
+[node name="HpDisplay" type="MarginContainer" parent="VBoxContainer/InfoBar/StatsPanel/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("9_vvitb")
+
+[node name="HpBar" type="ProgressBar" parent="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/HpDisplay"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_5ikym")
+theme_override_styles/fill = SubResource("StyleBoxFlat_itvb1")
+show_percentage = false
+
+[node name="HpLabel" type="Label" parent="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/HpDisplay"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MessagePanel" type="PanelContainer" parent="VBoxContainer/InfoBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_vvitb")
+
+[node name="MessageLog" type="ScrollContainer" parent="VBoxContainer/InfoBar/MessagePanel"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+script = ExtResource("10_5ikym")
+
+[node name="MessageList" type="VBoxContainer" parent="VBoxContainer/InfoBar/MessagePanel/MessageLog"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="PlayerCreated" from="VBoxContainer/SubViewportContainer/SubViewport/Game" to="VBoxContainer/InfoBar/StatsPanel/VBoxContainer/HpDisplay" method="Initialize"]

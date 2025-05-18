@@ -4,7 +4,7 @@ namespace roguelike
 {
 	public partial class InputHandler : Node
 	{
-		public enum InputHandlers { MAIN_GAME, GAME_OVER }
+		public enum InputHandlers { MAIN_GAME, GAME_OVER, HISTORY_VIEWER }
 
 		[Export]
 		public InputHandlers StartInputHandler { get; set; }
@@ -17,6 +17,7 @@ namespace roguelike
 			{
 				{ InputHandlers.MAIN_GAME, GetNode<MainGameInputHandler>("MainGameInputHandler") },
 				{ InputHandlers.GAME_OVER, GetNode<GameOverInputHandler>("GameOverInputHandler") },
+				{ InputHandlers.HISTORY_VIEWER, GetNode<HistoryViewerInputHandler>("HistoryViewerInputHandler") },
 			};
 
 			GetNode<SignalBus>("/root/SignalBus").PlayerDied += () => TransitionTo(InputHandlers.GAME_OVER);
@@ -28,8 +29,12 @@ namespace roguelike
 			return currentInputHandler.GetAction(player);
 		}
 
-		private void TransitionTo(InputHandlers inputHandler) =>
+		public void TransitionTo(InputHandlers inputHandler)
+		{
+			currentInputHandler?.Exit();
 			currentInputHandler = inputHandlerNodes[inputHandler];
+			currentInputHandler.Enter();
+		}
 	}
 
 }

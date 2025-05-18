@@ -18,14 +18,17 @@ namespace roguelike
             }
 
             var damage = Entity.FighterComponent.Attack - target.FighterComponent.Defense;
+            var AttackColor = Entity == GetMapData().Player ? Colors.PLAYER_ATTACK : Colors.ENEMY_ATTACK;
             var AttackDescription = $"Attacking {target.GetEntityName()} at {target.GridPosition}";
+
             if (damage < 0)
             {
                 AttackDescription += " but it was blocked!";
                 damage = 0;
             }
+
             target.FighterComponent.HP -= damage;
-            GD.Print(AttackDescription);
+            MessageLog.SendMessage(AttackDescription, AttackColor);
         }
     }
 }

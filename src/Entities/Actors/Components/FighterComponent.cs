@@ -3,6 +3,8 @@ namespace roguelike
 {
     public partial class FighterComponent : Component
     {
+        [Signal]
+        public delegate void HpChangedEventHandler(int hp, int hpMax);
         public int MaxHP { get; set; }
         private int hp;
         public int HP
@@ -10,6 +12,7 @@ namespace roguelike
             get => hp; set
             {
                 hp = Mathf.Clamp(value, 0, MaxHP);
+                EmitSignal(SignalName.HpChanged, hp, MaxHP);
                 if (hp <= 0) Die();
             }
         }
@@ -54,7 +57,8 @@ namespace roguelike
                 DeathMessage = $"{Entity.GetEntityName()} has died.";
             }
 
-            GD.Print(DeathMessage);
+            var messageColor = Entity == GetMapData().Player ? Colors.PLAYER_DIE : Colors.ENEMY_DIE;
+            MessageLog.SendMessage(DeathMessage, messageColor);
 
             Entity.EntityType = EntityType.CORPSE;
             Entity.Texture = DeathTexture;

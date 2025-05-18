@@ -7,4 +7,7 @@ public partial class BaseInputHandler : Node
 	{
 		return null;
 	}
+
+	public virtual void Enter() { }
+	public virtual void Exit() { }
 }

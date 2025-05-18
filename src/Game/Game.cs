@@ -6,6 +6,8 @@ namespace roguelike
 	{
 		public const int GAME_SCALE = 2;
 
+		[Signal]
+		public delegate void PlayerCreatedEventHandler(Entity player);
 		Vector2I playerGridPos = Vector2I.Zero;
 		Entity player;
 		readonly EntityDefinition playerDefinition = ResourceLoader
@@ -23,9 +25,12 @@ namespace roguelike
 
 			player = new Entity(Vector2I.Zero, playerDefinition, map.MapData);
 			player.AddChild(camera);
+			EmitSignal(SignalName.PlayerCreated, player);
 
 			map.GenerateDungeon(player);
 			map.UpdateFov(player.GridPosition);
+
+			MessageLog.SendMessage("Welcome Adventurer!", Colors.WELCOME_TEXT);
 		}
 
 		public override void _PhysicsProcess(double delta)
