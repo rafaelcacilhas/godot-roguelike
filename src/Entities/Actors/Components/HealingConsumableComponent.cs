@@ -19,7 +19,7 @@ namespace roguelike{
                 return false;
             }
 
-            MessageLog.SendMessage($"{consumer.Name} used {Name} and recovered {amountRecovered} HP.", Colors.HEALTH_RECOVERED);
+            MessageLog.SendMessage($"{consumer.EntityName} recovered {amountRecovered} HP.", Colors.HEALTH_RECOVERED);
             Consume(consumer);
 
             return true;

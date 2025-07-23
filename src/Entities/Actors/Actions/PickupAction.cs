@@ -27,7 +27,7 @@ namespace roguelike
 					mapData.Entities.Remove(item);
 					item.GetParent().RemoveChild(item);
 					inventory.Items.Add(item);
-					MessageLog.SendMessage($"You pick up the {item.Name}", Colors.White);
+					MessageLog.SendMessage($"You pick up the {item.EntityName}", Colors.White);
 					return true;
 				}
 			}
