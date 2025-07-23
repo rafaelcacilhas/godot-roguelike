@@ -107,16 +107,14 @@ namespace roguelike
                 {
                     ConsumableComponent = new HealingConsumableComponent(healingConsumable);
                     AddChild(ConsumableComponent);
-                }   
-
-                if (entityDefinition.InventoryCapacity > 0)
-                {
-                    InventoryComponent = new InventoryComponent(entityDefinition.InventoryCapacity); 
-                    AddChild(InventoryComponent);      
-                }   
-
+                }
             }
-
+            
+            if (entityDefinition.InventoryCapacity > 0)
+            {
+                InventoryComponent = new InventoryComponent(entityDefinition.InventoryCapacity);
+                AddChild(InventoryComponent);
+            }   
         }
 
     }

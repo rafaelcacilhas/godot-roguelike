@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="EntityDefinition" load_steps=6 format=3 uid="uid://c8cxxt06yw28x"]
 
-[ext_resource type="Script" uid="uid://cxg18fv1otod5" path="res://src/Entities/EntityDefinition.cs" id="1_xfnmh"]
 [ext_resource type="Script" uid="uid://c5e30gt0mw68l" path="res://src/Entities/Actors/Components/Definitions/HealingConsumableComponentDefinition.cs" id="1_6eaxk"]
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="1_pw7ik"]
+[ext_resource type="Script" uid="uid://cxg18fv1otod5" path="res://src/Entities/EntityDefinition.cs" id="1_xfnmh"]
 
 [sub_resource type="Resource" id="Resource_23aud"]
 script = ExtResource("1_6eaxk")
@@ -22,3 +22,4 @@ EntityType = 1
 AIType = 0
 InventoryCapacity = 0
 ConsumableComponentDefinition = SubResource("Resource_23aud")
+metadata/_custom_type_script = "uid://cxg18fv1otod5"
