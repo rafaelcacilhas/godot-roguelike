@@ -10,8 +10,8 @@ region = Rect2(608, 176, 16, 16)
 
 [sub_resource type="Resource" id="Resource_eqybp"]
 script = ExtResource("1_qkhq4")
-MaxHP = 10
-Attack = 5
+MaxHP = 100
+Attack = 50
 Defense = 2
 DeathTexture = SubResource("AtlasTexture_qkhq4")
 DeathColor = Color(0.545098, 0, 0, 1)
@@ -30,3 +30,4 @@ isBlockingMovement = true
 EntityType = 2
 FighterDefinition = SubResource("Resource_eqybp")
 AIType = 1
+InventoryCapacity = 26

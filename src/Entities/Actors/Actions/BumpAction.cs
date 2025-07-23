@@ -10,14 +10,14 @@ namespace roguelike
         }
 
 
-        public override void Perform()
+        public override bool Perform()
         {
             var target = GetTargetActor();
             if (target == null)
             {
-                new MovementAction(Entity, Offset.X, Offset.Y).Perform();
+                return new MovementAction(Entity, Offset.X, Offset.Y).Perform();
             }
-            new MeleeAction(Entity, Offset.X, Offset.Y).Perform();
+            return new MeleeAction(Entity, Offset.X, Offset.Y).Perform();
         }
     }
 }

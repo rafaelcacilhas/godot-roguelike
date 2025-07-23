@@ -29,6 +29,10 @@ namespace roguelike
 				}
 			}
 
+			if(Input.IsActionJustPressed("grab_item")) action = new PickupAction(player);
+			if(Input.IsActionJustPressed("leave_item")) action = new PickupAction(player);
+			if(Input.IsActionJustPressed("item_activate")) action = new PickupAction(player);
+			
 			if (Input.IsActionJustPressed("ui_cancel")) action = new EscapeAction(player);
 			if (Input.IsActionJustPressed("ui_text_backspace")) action = new RestartAction(player);
 

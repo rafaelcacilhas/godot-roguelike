@@ -35,29 +35,9 @@ namespace roguelike
 
 		public override void _PhysicsProcess(double delta)
 		{
-			if (inputHandler == null)
-			{
-				GD.PrintErr("inputHandler is null!");
-				return;
-			}
-
-			if (player == null)
-			{
-				GD.PrintErr("player is null!");
-				return;
-			}
-
-			if (map == null || map.MapData == null)
-			{
-				GD.PrintErr("map or map.MapData is null!");
-				return;
-			}
-
 			var action = inputHandler.GetAction(player);
-
-			if (action != null)
+			if (action != null && action.Perform())
 			{
-				action.Perform();
 				HandleEnemyTurn();
 				map.UpdateFov(player.GridPosition);
 			}

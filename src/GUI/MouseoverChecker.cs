@@ -43,7 +43,7 @@ namespace roguelike
 				return string.Empty;
 			}
 
-			var entitiesAtLocation = mapData.GetEntityAtLocation(gridPosition);
+			var entitiesAtLocation = mapData.GetBlockingEntityAtLocation(gridPosition);
 
 			return entitiesAtLocation?.GetEntityName();
 		}

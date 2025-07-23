@@ -34,6 +34,9 @@ namespace roguelike
 
         public FighterComponent FighterComponent { get; set; }
         public BaseAIComponent AIComponent { get; set; }
+        public ConsumableComponent ConsumableComponent { get; set; }
+        public InventoryComponent InventoryComponent { get; set; }
+
 
         private EntityType entityType;
         public EntityType EntityType
@@ -63,11 +66,6 @@ namespace roguelike
             MapData.UnregisterBlockingEntity(this);
             GridPosition += offset;
             MapData.RegisterBlockingEntity(this);
-        }
-
-        public bool IsBlockingMovement()
-        {
-            return BlocksMovement;
         }
 
         public string GetEntityName()
@@ -101,6 +99,22 @@ namespace roguelike
             {
                 FighterComponent = new FighterComponent(entityDefinition.FighterDefinition);
                 AddChild(FighterComponent);
+            }
+
+            if (entityDefinition.ConsumableComponentDefinition != null)
+            {
+                if (entityDefinition.ConsumableComponentDefinition is HealingConsumableComponentDefinition healingConsumable)
+                {
+                    ConsumableComponent = new HealingConsumableComponent(healingConsumable);
+                    AddChild(ConsumableComponent);
+                }   
+
+                if (entityDefinition.InventoryCapacity > 0)
+                {
+                    InventoryComponent = new InventoryComponent(entityDefinition.InventoryCapacity); 
+                    AddChild(InventoryComponent);      
+                }   
+
             }
 
         }

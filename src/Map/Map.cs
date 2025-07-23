@@ -30,6 +30,7 @@ namespace roguelike
         public void GenerateDungeon(Entity player)
         {
             MapData = dungeonGenerator.GenerateDungeon(player);
+            MapData.EntityPlaced += item => AddChild(item);
             PlaceTiles();
             PlaceEntities(player);
         }

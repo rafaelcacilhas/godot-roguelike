@@ -5,6 +5,9 @@ namespace roguelike
 {
     public partial class MapData : RefCounted
     {
+        [Signal]
+        public delegate void EntityPlacedEventHandler(Entity item);
+
         public const string FLOOR = "floor";
         public const string WALL = "wall";
         public static readonly Dictionary<string, TileDefinition> tileTypes = new Dictionary<string, TileDefinition> {
@@ -15,18 +18,20 @@ namespace roguelike
         public int Width { get; set; }
         public int Height { get; set; }
         public Array<Tile> Tiles { get; set; }
-        public Array<Entity> Entities { get; set; } = new Array<Entity>();
+        public Array<Entity> Entities { get; set; }
         public Entity Player;
 
-        public float EntityPathfindingWeight = 10;
+        const float entityPathfindingWeight = 10.0f;
         public AStarGrid2D Pathfinder;
         public MapData(int mapWidth, int mapHeight, Entity player)
         {
             Width = mapWidth;
             Height = mapHeight;
             Player = player;
+            Entities = new();
             SetupTiles();
         }
+
         private void SetupTiles()
         {
             Tiles = new Array<Tile>();
@@ -45,11 +50,7 @@ namespace roguelike
         public Tile GetTile(Vector2I gridPosition)
         {
             var tileIndex = GridToIndex(gridPosition);
-            if (tileIndex == -1)
-            {
-                GD.PrintErr($"Grid position {gridPosition} is out of bounds.");
-                return null;
-            }
+            if (tileIndex == -1) return null;
             if (tileIndex >= Tiles.Count)
             {
                 GD.PrintErr($"Tile index {tileIndex} is invalid. Tiles count: {Tiles.Count}");
@@ -72,23 +73,11 @@ namespace roguelike
                 && coordinate.Y < Height;
         }
 
-        public bool HasBlockingEntity(Vector2I gridPosition)
+        public Entity GetBlockingEntityAtLocation(Vector2I gridPosition)
         {
             foreach (var entity in Entities)
             {
-                if (entity.GridPosition == gridPosition && entity.IsBlockingMovement())
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public Entity GetEntityAtLocation(Vector2I gridPosition)
-        {
-            foreach (var entity in Entities)
-            {
-                if (entity.GridPosition == gridPosition)
+                if (entity.BlocksMovement && entity.GridPosition == gridPosition)
                 {
                     return entity;
                 }
@@ -98,7 +87,7 @@ namespace roguelike
 
         public void RegisterBlockingEntity(Entity entity)
         {
-            Pathfinder.SetPointWeightScale(entity.GridPosition, EntityPathfindingWeight);
+            Pathfinder.SetPointWeightScale(entity.GridPosition, entityPathfindingWeight);
         }
 
         public void UnregisterBlockingEntity(Entity entity)
@@ -124,7 +113,7 @@ namespace roguelike
 
             foreach (var entity in Entities)
             {
-                if (entity.IsBlockingMovement())
+                if (entity.BlocksMovement)
                 {
                     RegisterBlockingEntity(entity);
                 }
@@ -154,6 +143,15 @@ namespace roguelike
             return null;
         }
 
+        public Array<Entity> GetItems()
+        {
+            var items = new Array<Entity>();
+            foreach (var entity in Entities)
+            {
+                if (entity.ConsumableComponent != null) items.Add(entity);
+            }
+            return items;
+        }
 
     }
 }

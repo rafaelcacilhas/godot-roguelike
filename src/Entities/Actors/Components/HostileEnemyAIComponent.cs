@@ -18,8 +18,7 @@ namespace roguelike{
 
                 if (path != null && path.Length > 0) {
                     var destination = (Vector2I)path[0];
-                    
-                    if (GetMapData().HasBlockingEntity(destination)) new WaitAction(Entity).Perform();
+                    if (GetMapData().GetBlockingEntityAtLocation(destination) != null) new WaitAction(Entity).Perform();
                     
                     path = path[1..^0];
                     var moveOffset = destination - Entity.GridPosition; 

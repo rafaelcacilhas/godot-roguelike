@@ -38,6 +38,17 @@ namespace roguelike
             if (HP < 0) HP = 0;
         }
 
+        public int Heal(int amount)
+        {
+            var newHP = HP + amount;
+            if (newHP > MaxHP) newHP = MaxHP;
+
+            var amountHealed = newHP - HP;
+            HP = newHP;
+            return amountHealed;
+        }
+
+
         public bool IsAlive()
         {
             return HP > 0;
@@ -58,7 +69,7 @@ namespace roguelike
             }
 
             var messageColor = Entity == GetMapData().Player ? Colors.PLAYER_DIE : Colors.ENEMY_DIE;
-            MessageLog.SendMessage(DeathMessage, messageColor);
+            SignalBus.Instance?.EmitSignal(SignalBus.SignalName.MessageSent, DeathMessage, messageColor);
 
             Entity.EntityType = EntityType.CORPSE;
             Entity.Texture = DeathTexture;

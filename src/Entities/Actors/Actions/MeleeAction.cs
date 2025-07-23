@@ -9,12 +9,12 @@ namespace roguelike
             Offset = new Vector2I(dx, dy);
         }
 
-        public override void Perform()
+        public override bool Perform()
         {
             var target = GetTargetActor();
             if (target == null)
             {
-                return;
+                return false;
             }
 
             var damage = Entity.FighterComponent.Attack - target.FighterComponent.Defense;
@@ -33,6 +33,7 @@ namespace roguelike
 
             target.FighterComponent.HP -= damage;
             MessageLog.SendMessage(AttackDescription, AttackColor);
+            return true;
         }
     }
 }

@@ -21,13 +21,18 @@ namespace roguelike{
         [ExportCategory("Monsters RNG")]
         [Export]
         public int MaxMonstersPerRoom { get; set; } = 5;
+        [Export]
+        public int MaxItemsPerRoom { get; set; } = 2;
 
         public const string ORC = "orc";
         public const string TROLL = "troll";
+        public const string HEALTH_POTION = "health_potion";
+
 		public static readonly Dictionary<string, EntityDefinition> entityTypes = new(){
-			{ ORC, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_orc.tres") },
-			{ TROLL, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_troll.tres") },
-		};
+            { ORC, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_orc.tres") },
+            { TROLL, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/actors/entity_definition_troll.tres") },
+            { HEALTH_POTION, ResourceLoader.Load<EntityDefinition>("res://assets/definitions/entities/items/health_potion_definition.tres") },
+        };
     
         RandomNumberGenerator rng = new RandomNumberGenerator();
 
@@ -116,8 +121,9 @@ namespace roguelike{
                 TunnelHorizontal(dungeon, end.Y, start.X, end.X);
             }
         }
-        
-        private void PlaceEntities(MapData dungeon, Rect2I room){
+
+        private void PlaceEntities(MapData dungeon, Rect2I room)
+        {
             var numberOfMonsters = rng.RandiRange(1, MaxMonstersPerRoom);
             for (int i = 0; i < numberOfMonsters; i++)
             {
@@ -126,10 +132,26 @@ namespace roguelike{
                 var monsterPosition = new Vector2I(monsterX, monsterY);
 
                 var canPlaceMonster = checkBlockers(dungeon, monsterPosition);
-                if (canPlaceMonster) {
+                if (canPlaceMonster)
+                {
                     var random = rng.RandiRange(0, 1);
-                    var monster = random < 0.5? new Entity(monsterPosition,entityTypes[ORC], dungeon) : new Entity(monsterPosition,entityTypes[TROLL], dungeon);
+                    var monster = random < 0.5 ? new Entity(monsterPosition, entityTypes[ORC], dungeon) : new Entity(monsterPosition, entityTypes[TROLL], dungeon);
                     dungeon.Entities.Add(monster);
+                }
+            }
+
+            var numberOfItems = rng.RandiRange(1, MaxItemsPerRoom);
+            for (int i = 0; i < numberOfItems; i++)
+            {
+                var itemX = rng.RandiRange(room.Position.X + 1, room.End.X - 1);
+                var itemY = rng.RandiRange(room.Position.Y + 1, room.End.Y - 1);
+                var itemPosition = new Vector2I(itemX, itemY);
+
+                var canPlaceItem  = checkBlockers(dungeon, itemPosition);
+                if (canPlaceItem)
+                {
+                    var item = new Entity(itemPosition, entityTypes[HEALTH_POTION], dungeon);
+                    dungeon.Entities.Add(item);
                 }
             }
         }

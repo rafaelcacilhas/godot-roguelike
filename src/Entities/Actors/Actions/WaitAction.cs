@@ -1,12 +1,12 @@
-using Godot;
 namespace roguelike
 {
-	public partial class WaitAction : Action {
+	public partial class WaitAction : Action
+	{
+		public WaitAction(Entity entity) : base(entity) { }
 
-        public WaitAction(Entity entity): base(entity) {}
-
-	public override void Perform() {
-        return;
+		public override bool Perform()
+		{
+			return true;
+		}
 	}
- }
 }

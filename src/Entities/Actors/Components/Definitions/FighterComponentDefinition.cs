@@ -21,6 +21,6 @@ namespace roguelike
             .Load<AtlasTexture>("res://assets/resources/default_death_texture.tres");
 
         [Export]
-        public Color DeathColor { get; set; } = Colors.DarkRed;
+        public Color DeathColor { get; set; } = Colors.DEATH;
     }
 }

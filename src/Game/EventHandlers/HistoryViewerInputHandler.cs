@@ -21,7 +21,7 @@ namespace roguelike
             messageLog = GetNode<MessageLog>(MessageLogPath);
         }
         public override void Enter() =>
-            messagePanel.SelfModulate = Colors.Red;
+            messagePanel.SelfModulate = Colors.UIDetails;
 
         public override void Exit() =>
             messagePanel.SelfModulate = Colors.White;

@@ -3,12 +3,12 @@ using Godot;
 namespace roguelike
 {
 	[GlobalClass]
-		public partial class	EntityDefinition : Resource
+	public partial class EntityDefinition : Resource
 	{
 		[ExportCategory("Visuals")]
 		[Export]
 		public string Name { get; set; } = "Unnamed Entity";
-	
+
 		[Export]
 		public AtlasTexture Texture { get; set; }
 		[Export(PropertyHint.ColorNoAlpha)]
@@ -26,5 +26,9 @@ namespace roguelike
 		public FighterComponentDefinition FighterDefinition { get; set; }
 		[Export]
 		public Entity.AIType AIType { get; set; } = Entity.AIType.NONE;
+		[Export]
+		public int InventoryCapacity { get; set; } = 0;
+		[Export]
+		public ConsumableComponentDefinition ConsumableComponentDefinition { get; set; }
 	}
-}
+}	

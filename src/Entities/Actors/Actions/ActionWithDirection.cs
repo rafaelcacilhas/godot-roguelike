@@ -9,9 +9,9 @@ namespace roguelike
             Offset = new Vector2I(dx, dy);
         }
 
-        public override void Perform()
+        public override bool Perform()
         {
-            throw new System.Exception("Calling ActionWithDirection Perform().");
+            return false;
         }
 
         public Vector2I GetDestination()
@@ -21,7 +21,7 @@ namespace roguelike
 
         public Entity GetBlockingEntityAtDestination()
         {
-            return GetMapData().GetEntityAtLocation(GetDestination());
+            return GetMapData().GetBlockingEntityAtLocation(GetDestination());
         }
 
         public Entity GetTargetActor()
