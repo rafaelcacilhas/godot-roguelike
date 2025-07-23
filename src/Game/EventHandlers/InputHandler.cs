@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 namespace roguelike
 {
 	public partial class InputHandler : Node
 	{
-		public enum InputHandlers { MAIN_GAME, GAME_OVER, HISTORY_VIEWER }
+		public enum InputHandlers { MAIN_GAME, GAME_OVER, HISTORY_VIEWER, DUMMY }
 
 		[Export]
 		public InputHandlers StartInputHandler { get; set; }
@@ -18,22 +19,29 @@ namespace roguelike
 				{ InputHandlers.MAIN_GAME, GetNode<MainGameInputHandler>("MainGameInputHandler") },
 				{ InputHandlers.GAME_OVER, GetNode<GameOverInputHandler>("GameOverInputHandler") },
 				{ InputHandlers.HISTORY_VIEWER, GetNode<HistoryViewerInputHandler>("HistoryViewerInputHandler") },
+				{ InputHandlers.DUMMY, GetNode<BaseInputHandler>("DummyInputHandler") },
 			};
 
 			GetNode<SignalBus>("/root/SignalBus").PlayerDied += () => TransitionTo(InputHandlers.GAME_OVER);
 			TransitionTo(StartInputHandler);
 		}
 
-		public Action GetAction(Entity player)
+		public Task<Action> GetActionAsync(Entity player)
 		{
-			return currentInputHandler.GetAction(player);
+			return currentInputHandler?.GetActionAsync(player);
 		}
 
 		public void TransitionTo(InputHandlers inputHandler)
 		{
+			if (inputHandlerNodes[inputHandler] == null)
+			{
+				GD.PrintErr($"No input handler found for {inputHandler}");
+				return;
+			}
 			currentInputHandler?.Exit();
 			currentInputHandler = inputHandlerNodes[inputHandler];
-			currentInputHandler.Enter();
+
+			currentInputHandler?.Enter();
 		}
 	}
 

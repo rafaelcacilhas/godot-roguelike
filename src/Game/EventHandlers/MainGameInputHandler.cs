@@ -1,5 +1,8 @@
 using Godot;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+
 namespace roguelike
 {
 	public partial class MainGameInputHandler : BaseInputHandler
@@ -16,7 +19,37 @@ namespace roguelike
 			{"move_down_right", Vector2I.Down + Vector2I.Right},
 		};
 
-		public override Action GetAction(Entity player)
+		private PackedScene inventoryMenuScene;
+
+        public override void _Ready()
+        {
+			inventoryMenuScene = ResourceLoader.Load<PackedScene>(
+			"res://src/GUI/InventoryMenu/inventory_menu.tscn"
+			);
+        }
+
+		public async Task<Entity> GetItemAsync(string windowTitle, InventoryComponent inventory)
+		{
+			if (inventory.Items.Count == 0)
+			{
+				MessageLog.SendMessage("Inventory is empty!", Colors.IMPOSSIBLE);
+				return null;
+			}
+			var inventoryMenu = inventoryMenuScene.Instantiate<InventoryMenu>();
+			AddChild(inventoryMenu);
+
+			inventoryMenu.Build(windowTitle, inventory);
+
+			GetParent<InputHandler>().TransitionTo(InputHandler.InputHandlers.DUMMY);
+
+			var selectedItem = await ToSignal(inventoryMenu, InventoryMenu.SignalName.ItemSelected);
+			await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+
+			GetParent<InputHandler>().CallDeferred(nameof(InputHandler.TransitionTo), (int)InputHandler.InputHandlers.MAIN_GAME);
+			return (Entity)selectedItem?.FirstOrDefault();
+		}
+
+		public override async Task<Action> GetActionAsync(Entity player)
 		{
 			Action action = null;
 
@@ -29,10 +62,18 @@ namespace roguelike
 				}
 			}
 
-			if(Input.IsActionJustPressed("grab_item")) action = new PickupAction(player);
-			if(Input.IsActionJustPressed("leave_item")) action = new PickupAction(player);
-			if(Input.IsActionJustPressed("item_activate")) action = new PickupAction(player);
-			
+			if (Input.IsActionJustPressed("grab_item")) action = new PickupAction(player);
+			if (Input.IsActionJustPressed("leave_item"))
+			{
+				var selectedItem = await GetItemAsync("Select an item to drop", player.InventoryComponent);
+				action = new DropItemAction(player, selectedItem);
+			}
+			if (Input.IsActionJustPressed("item_activate"))
+			{
+				var selectedItem = await GetItemAsync("Select an item to use", player.InventoryComponent);
+				action = new ItemAction(player, selectedItem);
+			}
+
 			if (Input.IsActionJustPressed("ui_cancel")) action = new EscapeAction(player);
 			if (Input.IsActionJustPressed("ui_text_backspace")) action = new RestartAction(player);
 

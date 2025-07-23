@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://w0jwbq5dwo6c"]
+[gd_scene load_steps=18 format=3 uid="uid://w0jwbq5dwo6c"]
 
 [ext_resource type="Script" uid="uid://bxepnsvptgupw" path="res://src/Game/Game.cs" id="1_5fh4b"]
 [ext_resource type="Script" uid="uid://byh7hp1csuc7v" path="res://src/Map/Map.cs" id="2_0fb64"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://cnqa24lrby71v" path="res://src/Map/DungeonGenerator.cs" id="4_0fb64"]
 [ext_resource type="Script" uid="uid://5x1anesh62fn" path="res://src/Game/EventHandlers/HistoryViewerInputHandler.cs" id="5_itvb1"]
 [ext_resource type="Script" uid="uid://cwtel5s5q5etn" path="res://src/Map/FieldOfView.cs" id="5_qb2ae"]
+[ext_resource type="Script" uid="uid://bjwt7k7ubeyvn" path="res://src/Game/DummyInputHandler.cs" id="6_w4r46"]
 [ext_resource type="Texture2D" uid="uid://drddtc2xn2fan" path="res://assets/images/monochrome_packed.png" id="8_yeien"]
 [ext_resource type="Script" uid="uid://r8a44tix635a" path="res://src/GUI/HpDisplay.cs" id="9_vvitb"]
 [ext_resource type="Script" uid="uid://d0ecptlkdkuku" path="res://src/GUI/MouseoverChecker.cs" id="9_x1u72"]
@@ -76,6 +77,9 @@ script = ExtResource("3_2s6fp")
 script = ExtResource("5_itvb1")
 MessagesPanelPath = NodePath("../../../../../InfoBar/MessagePanel")
 MessageLogPath = NodePath("../../../../../InfoBar/MessagePanel/MessageLog")
+
+[node name="DummyInputHandler" type="Node" parent="VBoxContainer/SubViewportContainer/SubViewport/Game/InputHandler"]
+script = ExtResource("6_w4r46")
 
 [node name="Map" type="Node2D" parent="VBoxContainer/SubViewportContainer/SubViewport/Game"]
 script = ExtResource("2_0fb64")

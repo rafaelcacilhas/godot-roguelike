@@ -6,7 +6,7 @@ namespace roguelike
         public Entity Item { get; set; }
         public Vector2I TargetPosition { get; set; }
 
-        public ItemAction(Entity entity, Entity item, Vector2I? targetPosition) : base(entity)
+        public ItemAction(Entity entity, Entity item, Vector2I? targetPosition = null) : base(entity)
         {
             Item = item;
             TargetPosition = targetPosition == null? entity.GridPosition : targetPosition.Value;

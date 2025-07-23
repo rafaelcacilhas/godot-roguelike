@@ -22,7 +22,7 @@ namespace roguelike{
         [Export]
         public int MaxMonstersPerRoom { get; set; } = 5;
         [Export]
-        public int MaxItemsPerRoom { get; set; } = 2;
+        public int MaxItemsPerRoom { get; set; } = 7;
 
         public const string ORC = "orc";
         public const string TROLL = "troll";

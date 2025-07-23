@@ -33,9 +33,9 @@ namespace roguelike
 			MessageLog.SendMessage("Welcome Adventurer!", Colors.WELCOME_TEXT);
 		}
 
-		public override void _PhysicsProcess(double delta)
+		public override async void _PhysicsProcess(double delta)
 		{
-			var action = inputHandler.GetAction(player);
+			var action = await inputHandler.GetActionAsync(player);
 			if (action != null && action.Perform())
 			{
 				HandleEnemyTurn();

@@ -1,4 +1,5 @@
 using Godot;
+using System.Threading.Tasks;
 
 namespace roguelike
 {
@@ -27,7 +28,7 @@ namespace roguelike
             messagePanel.SelfModulate = Colors.White;
 
 
-        public override Action GetAction(Entity player)
+        public override Task<Action> GetActionAsync(Entity player)
         {
             Action action = null;
 
@@ -43,7 +44,7 @@ namespace roguelike
             if (Input.IsActionJustPressed("quit"))
                 GetTree().Quit();
 
-            return action;
+            return new Task<Action>(() => action);
         }
     }
 }

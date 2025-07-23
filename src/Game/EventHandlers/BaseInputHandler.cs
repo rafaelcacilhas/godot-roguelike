@@ -1,13 +1,14 @@
 using Godot;
-using roguelike;
-
-public partial class BaseInputHandler : Node
+using System.Threading.Tasks;
+namespace roguelike
 {
-	public virtual Action GetAction(Entity entity)
+	public partial class BaseInputHandler : Node
 	{
-		return null;
-	}
+			public virtual Task<Action> GetActionAsync(Entity player) =>
+				new Task<Action>(() => null);
 
-	public virtual void Enter() { }
-	public virtual void Exit() { }
+		public virtual void Enter() { }
+		public virtual void Exit() { }
+	}
 }
+
